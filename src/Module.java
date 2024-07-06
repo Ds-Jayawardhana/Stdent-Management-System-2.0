@@ -1,12 +1,11 @@
 public class Module {
-    Double marks;
+    private Double marks;
 
-    public Module(String code,Double marks){
-        this.marks=marks;
+    public void setMarks(Double marks) {
+        this.marks = marks;
     }
-    public Double getModule(){
+
+    public Double getMarks() {
         return marks;
     }
-
 }
-

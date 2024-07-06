@@ -1,8 +1,7 @@
-
 public class Student {
-    String name;
-    String studentID;
-    Module[] modules;
+    private String name;
+    private String studentID;
+    private Module[] modules;
 
     public Student(String name, String studentID) {
         this.name = name;
@@ -10,10 +9,8 @@ public class Student {
         this.modules = new Module[3];
     }
 
-    public void setModule(int index, Module module) {
-        if (index >= 0 && index < 3) {
-            this.modules[index] = module;
-        }
+    public void setModules(Module[] modules) {
+        this.modules = modules;
     }
 
     public String getName() {
@@ -39,8 +36,9 @@ public class Student {
     public double Average() {
         double total_modules = 0;
         for (Module module : modules) {
-            total_modules = total_modules + module.getModule();
-
+            if (module != null) {
+                total_modules = total_modules + module.getMarks();
+            }
         }
         return total_modules / 3;
     }

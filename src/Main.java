@@ -27,6 +27,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         //Defining a 2D Array with 2 rows and 100 columns//
         String[][] students = new String[2][100];
+        Student[] studentObjects = new Student[100];
 
         while (true) {
             System.out.println(prn_op);
@@ -49,7 +50,7 @@ public class Main {
                 case "3":
                     System.out.println("----------------------Delete Student------------------------");
                     System.out.println();
-                    dlt_students(students,scan);
+                    dlt_students(students, scan);
                     break;
                 case "4":
                     System.out.println("-----------------------Find Student--------------------------");
@@ -74,7 +75,7 @@ public class Main {
                 case "8":
                     System.out.println("----------------Add student name and module marks------------------");
                     System.out.println();
-                    mod_marks(students,scan);
+                    mod_marks(students, scan, studentObjects);
                     break;
                 case "0":
                     System.out.println("Exiting...");
@@ -131,22 +132,22 @@ public class Main {
                 }
                 /*Initializing already exsist boolean to false to check
                  user enterd details alredy exsisting in the array */
-                boolean alreadyexsist=false;
-                for(int i=0;i<students[0].length;i++){//iterating throught the 0 th index in array columns
+                boolean alreadyexsist = false;
+                for (int i = 0; i < students[0].length; i++) {//iterating throught the 0 th index in array columns
 
 
                     /*This if condition execute only if array row is not null and
                      if user enterd details in the array row data
                      */
-                    if(students[0][i]!=null && students[0][i].equals(Student_ID)){
-                        alreadyexsist=true;//if user enterd details are in the array make the alreadyexsist boolean to true
+                    if (students[0][i] != null && students[0][i].equals(Student_ID)) {
+                        alreadyexsist = true;//if user enterd details are in the array make the alreadyexsist boolean to true
                     }
                 }
 
-                if(alreadyexsist){
+                if (alreadyexsist) {
                     System.out.println("Student Already Exsisting");
 
-                }else{//this runs if user entered details are not already exsisting
+                } else {//this runs if user entered details are not already exsisting
                     System.out.println("Enter the name of the Student");
                     String Student_Name = scan.next();
                         /*This included variable use to chcek wheather there is any data in the array rows and columns
@@ -180,7 +181,7 @@ public class Main {
         System.out.print("Enter the student Id(W2083055) :-");
         String stud_Id = scan.next().toLowerCase();
 
-        try{
+        try {
             for (int l = 0; l < students.length; l++) {//iterate thorught the columns of the array
                 for (int j = 0; j < students[l].length; j++) {// iterating through the rows of the array
 
@@ -199,7 +200,7 @@ public class Main {
             /*If there is a null value in the row programme crashes with NulPointerException error
              *By handling that exception user can easily knows there is no data in that row
              */
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             System.out.println("Student Not Found,Please try again");//catch the nulpointerexception and prnt user to there is no any data
         }
     }
@@ -262,14 +263,13 @@ public class Main {
                      save it to text variable line by line */
                     String text = file_reader.nextLine();
                     String[] dtls = text.split(",");//split the line by the character ","
-                    if (dtls.length == 2 && i<students[0].length) {//cehcek if tthe splited dtls varaib;e
+                    if (dtls.length == 2 && i < students[0].length) {//cehcek if tthe splited dtls varaib;e
                         students[0][i] = dtls[0];//assigning to rows in the array
                         students[1][i] = dtls[1];
                         i++;
 
 
-
-                    } else if (i>=students[0].length) {
+                    } else if (i >= students[0].length) {
                         System.out.println("Data does not loaded to file");
 
                     }
@@ -286,6 +286,7 @@ public class Main {
         }
 
     }
+
     /*Sorting the Student details which enterd by the user by the name of the student
       in this method we are using Bubble sort algorithm to sort out the name of the students in
       alphabatical order
@@ -300,7 +301,6 @@ public class Main {
                 break;
             }
         }
-
 
 
         for (int l = 0; l < count - 1; l++) {//run the loop when l is than the count
@@ -335,7 +335,7 @@ public class Main {
     /*In the delete method user can enter the student id of the student which want to delte
      programme find out the the correct column of the array which relavant to the user entred Student Id
      and replace it null */
-    private static void dlt_students(String students[][], Scanner scan){
+    private static void dlt_students(String students[][], Scanner scan) {
         System.out.println("Enter the the student Id to Delete");
         String stud_Id = scan.next().toLowerCase();
         if (!(stud_Id.length() == 8) && !stud_Id.startsWith("w")) {//Verifying the user Entered ID is a correct one or not
@@ -343,13 +343,13 @@ public class Main {
             return;
         }
         //conveing the user enterd thee string tto lowercase
-        for(int l=0;l<students[0].length;l++){//iterating throught the 0 th data row
+        for (int l = 0; l < students[0].length; l++) {//iterating throught the 0 th data row
 
             //If condition chceks if there is any data and user entered is exsisting to replace with null(delete data)
-            if(students[0][l]!=null && students[0][l].equals(stud_Id)){
-                students[0][l]=null;
-                students[1][l]=null;
-                System.out.println("Students details with "+ stud_Id+"Deleted");
+            if (students[0][l] != null && students[0][l].equals(stud_Id)) {
+                students[0][l] = null;
+                students[1][l] = null;
+                System.out.println("Students details with " + stud_Id + "Deleted");
                 System.out.println();
                 return;
             }
@@ -364,56 +364,92 @@ public class Main {
 
 
 
-    private static void mod_marks(String[][] students, Scanner scan) {
-      
-        System.out.println("Enter a. or b. ");
-        System.out.println("a. Add Student Name");
-        System.out.println("b. Module marks 1,2 and 3");
+    private static void mod_marks(String[][] students, Scanner scan, Student[] studentObjects) {
+            int counts = 0;
+            System.out.println("Enter a. or b. ");
+            System.out.println("a. Add Student Name");
+            System.out.println("b. Module marks 1,2 and 3");
 
-        String ans = scan.next().toLowerCase();
+            String ans = scan.next().toLowerCase();
 
-        if (ans.equals("a")) {
-            System.out.println("Enter the Student ID to add name");
-            String studentID = scan.next();
-            for (int i = 0; i < students[0].length; i++) {
-                if (students[0][i] != null && students[0][i].equals(studentID)) {
-                    System.out.println("Enter the Student Name");
-                   
-                    Student StudentName = new Student("disandu", "89");
-                    System.out.println("Student Name Updated");
-                    System.out.println(StudentName.studentID);
-
-                    return;
-                }
-            }
-
-            System.out.println("Student Not Found");
-        } else if (ans.equals("b")) {
-            System.out.println("Enter the Student ID to add marks");
-            String studentID = scan.next();
-            for (int i = 0; i < students[0].length; i++) {
-                if (students[0][i] != null && students[0][i].equals(studentID)) {
-                    double[] marks = new double[3];
-                    for (int k = 0; k < 3; k++) {
-                        System.out.println("Enter marks for module " + (k + 1) + ":");
-                        marks[k] = scan.nextDouble();
-
+            if (ans.equals("a")) {
+                System.out.println("Enter the Student ID to add name");
+                String studentID = scan.next();
+                for (int i = 0; i < students[0].length; i++) {
+                    if (students[0][i] != null && students[0][i].equals(studentID)) {
+                        System.out.println("Enter the Student Name");
+                        String studentName = scan.next();
+                        Student newStudent = new Student(studentName, studentID);
+                        studentObjects[counts] = newStudent;
+                        counts++;
+                        students[1][i] = studentName;
+                        System.out.println("Student Name Updated");
+                        System.out.println(newStudent.getName());
+                        return;
                     }
+                }
 
-                    // Store marks in a comma-separated string
+                System.out.println("Student Not Found");
+            } else if (ans.equals("b")) {
+                System.out.println("Enter the Student ID to add marks");
+                String studentID = scan.next();
+                for (Student student : studentObjects) {
+                    if (student != null && student.getStudentID().equals(studentID)) {
+                        int index = indexOf(studentObjects, studentID);
+                        Module[] modules = new Module[3];
+                        for (int k = 0; k < 3; k++) {
+                            System.out.println("Enter marks for module " + (k + 1) + ":");
+                            Double mark = scan.nextDouble();
+                            Module module = new Module();
+                            module.setMarks(mark);
+                            modules[k] = module;
+                        }
+                        student.setModules(modules);
+                        System.out.println("Marks of the Student Added Successfully");
+                        return;
+                    }
+                }
+                System.out.println("Student Not Found");
+            }else if (ans.equals("c")) {
+                    printAllStudentMarks(studentObjects);
 
-                    students[1][i] += "," + marks[0] + "," + marks[1] + "," + marks[2];
-                    System.out.println("Module marks updated");
+            } else {
+                System.out.println("Enter Correct input a or b");
+            }
+        }
 
-                    System.out.println("enter student name to get the average");
-                    return;
+        public static int indexOf(Student[] arr, String target) {
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i] != null && arr[i].getStudentID().equals(target)) {
+                    return i; // Return index if found
                 }
             }
-            System.out.println("Student Not Found");
-        } else {
-            System.out.println("Enter Correct input a or b");
+            return -1;
+        }
+    private static void printAllStudentMarks(Student[] studentObjects) {
+        boolean studentsFound = false;
+        for (Student student : studentObjects) {
+            if (student != null) {
+                studentsFound = true;
+                System.out.println("Student: " + student.getName() + " (ID: " + student.getStudentID() + ")");
+                Module[] modules = student.getModules();
+                for (int i = 0; i < modules.length; i++) {
+                    if (modules[i] != null) {
+                        System.out.println("  Module " + (i + 1) + ": " + modules[i].getMarks());
+                    } else {
+                        System.out.println("  Module " + (i + 1) + ": No marks entered");
+                    }
+                }
+                System.out.println("  Average: " + student.Average());
+                System.out.println("  Grade: " + student.calcGrade());
+                System.out.println();
+            }
+        }
+        if (!studentsFound) {
+            System.out.println("No students found in the system.");
         }
     }
+    }
 
-}
+
 
