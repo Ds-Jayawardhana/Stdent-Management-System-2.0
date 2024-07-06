@@ -1,8 +1,8 @@
 
 public class Student {
-    private String name;
-    private String studentID;
-    private Module[] modules;
+    String name;
+    String studentID;
+    Module[] modules;
 
     public Student(String name, String studentID) {
         this.name = name;

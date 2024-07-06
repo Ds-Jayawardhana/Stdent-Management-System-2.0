@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Main {
@@ -79,14 +80,14 @@ public class Main {
                     System.out.println("Exiting...");
                     return;
                 default:
-                    System.out.println("------------------------------Invalid option-------------------------");
+                    System.out.println("Invalid option please enter number between 1 to 8");
                     System.out.println();
                     break;
             }
         }
     }
 
-    /*Programe iterates thorugh the 2D array and cehcks the null values exsisting in the array and count them 
+    /*Programe iterates thorugh the 2D array and cehcks the null values exsisting in the array and count them
     to get the number of available seats to register.*/
 
     private static void check_Seats(String[][] students) {
@@ -103,7 +104,7 @@ public class Main {
         System.out.println("The Number of Seats Available is" + " " + (count / 2));
     }
 
-    /*Programe iterate throught the 2D array find the firstnull values to replace it with student details 
+    /*Programe iterate throught the 2D array find the firstnull values to replace it with student details
       and Show if there is no any avaiable seats
     */
 
@@ -122,15 +123,19 @@ public class Main {
         } else {
             String answer = "yes";
             while (!answer.equals("no")) {
-                System.out.println("Enter the Student ID Number");//Asking user to enter the student ID
+                System.out.println("Enter the Student ID Number(W2083055)");//Asking user to enter the student ID
                 String Student_ID = scan.next();
+                if (!(Student_ID.length() == 8) && !Student_ID.startsWith("w")) {//Verifying the user Entered ID is a correct one or not
+                    System.out.println("Student ID Must Contain 8 Characters & Must Start with W");
+                    return;
+                }
                 /*Initializing already exsist boolean to false to check
                  user enterd details alredy exsisting in the array */
                 boolean alreadyexsist=false;
                 for(int i=0;i<students[0].length;i++){//iterating throught the 0 th index in array columns
 
 
-                    /*This if condition execute only if array row is not null and 
+                    /*This if condition execute only if array row is not null and
                      if user enterd details in the array row data
                      */
                     if(students[0][i]!=null && students[0][i].equals(Student_ID)){
@@ -172,8 +177,9 @@ public class Main {
     }
 
     private static void find_student(String students[][], Scanner scan) {
-        System.out.print("Enter the student Id:-");
+        System.out.print("Enter the student Id(W2083055) :-");
         String stud_Id = scan.next().toLowerCase();
+
         try{
             for (int l = 0; l < students.length; l++) {//iterate thorught the columns of the array
                 for (int j = 0; j < students[l].length; j++) {// iterating through the rows of the array
@@ -198,7 +204,7 @@ public class Main {
         }
     }
     /*Defining a method to store user entered student details into a txt file.
-      Without saving in a file if a user enters data it will automaaticaly erase the data from RAM and 
+      Without saving in a file if a user enters data it will automaaticaly erase the data from RAM and
       can't rerieve again when user open the programme again.By saving to file it allows user to save
       student details in the ROM of the device
      */
@@ -227,10 +233,11 @@ public class Main {
             for (int j = 0; j < students[0].length; j++) {//Iterating throught the array
                 if (students[0][j] != null) {
                     fileWriter.write(students[0][j] + "," + students[1][j] + "\n");//Writing student details in the array to the .txt file
-                    System.out.println("Succesfuly Data Saved");
+
 
                 }
             }
+            System.out.println("Successfully Data Saved");
 
         } catch (IOException e) {
             System.out.println(students);
@@ -238,9 +245,9 @@ public class Main {
         }
 
     }
-    
 
-    /*Loading data from a file to the array of the programme to 
+
+    /*Loading data from a file to the array of the programme to
       if there is any previously saved student details*/
 
     private static void load_file(String students[][]) {
@@ -248,7 +255,7 @@ public class Main {
 
             File file = new File("std_dtls.txt");//defining the path name to the programme
             if (file.exists()) {
-                Scanner file_reader = new Scanner(file);//Defining file reader object 
+                Scanner file_reader = new Scanner(file);//Defining file reader object
                 int i = 0;
                 while (file_reader.hasNextLine()) {//going throught the lines in file until there are lines
                     /*file reader going throught the lines in the file and
@@ -280,7 +287,7 @@ public class Main {
 
     }
     /*Sorting the Student details which enterd by the user by the name of the student
-      in this method we are using Bubble sort algorithm to sort out the name of the students in 
+      in this method we are using Bubble sort algorithm to sort out the name of the students in
       alphabatical order
      */
     private static void stud_sort(String students[][]) {
@@ -298,7 +305,7 @@ public class Main {
 
         for (int l = 0; l < count - 1; l++) {//run the loop when l is than the count
             for (int j = 0; j < count - 1 - l; j++) {
-                /*comparing the data in a the column with other column 
+                /*comparing the data in a the column with other column
                   first programme ignores the case if the letters to compare
                   */
                 if (students[1][j].compareToIgnoreCase(students[1][j + 1]) > 0) {
@@ -325,14 +332,17 @@ public class Main {
         }
     }
 
-    /*In the delete method user can enter the student id of the student which want to delte 
+    /*In the delete method user can enter the student id of the student which want to delte
      programme find out the the correct column of the array which relavant to the user entred Student Id
      and replace it null */
-
-
     private static void dlt_students(String students[][], Scanner scan){
         System.out.println("Enter the the student Id to Delete");
-        String stud_Id = scan.next().toLowerCase();//conveing the user enterd thee string tto lowercase
+        String stud_Id = scan.next().toLowerCase();
+        if (!(stud_Id.length() == 8) && !stud_Id.startsWith("w")) {//Verifying the user Entered ID is a correct one or not
+            System.out.println("Student ID Must Contain 8 Characters & Must Start with W");
+            return;
+        }
+        //conveing the user enterd thee string tto lowercase
         for(int l=0;l<students[0].length;l++){//iterating throught the 0 th data row
 
             //If condition chceks if there is any data and user entered is exsisting to replace with null(delete data)
@@ -345,16 +355,21 @@ public class Main {
             }
 
         }
-        //if there is no any student details Programme details user to there is no student details found  
+        //if there is no any student details Programme details user to there is no student details found
 
         System.out.println("Student Not Found Try again");
         System.out.println();
 
     }
+
+
+
     private static void mod_marks(String[][] students, Scanner scan) {
+      
         System.out.println("Enter a. or b. ");
         System.out.println("a. Add Student Name");
         System.out.println("b. Module marks 1,2 and 3");
+
         String ans = scan.next().toLowerCase();
 
         if (ans.equals("a")) {
@@ -363,12 +378,15 @@ public class Main {
             for (int i = 0; i < students[0].length; i++) {
                 if (students[0][i] != null && students[0][i].equals(studentID)) {
                     System.out.println("Enter the Student Name");
-                    String studentName = scan.next();
-                    students[1][i] = studentName;
+                   
+                    Student StudentName = new Student("disandu", "89");
                     System.out.println("Student Name Updated");
+                    System.out.println(StudentName.studentID);
+
                     return;
                 }
             }
+
             System.out.println("Student Not Found");
         } else if (ans.equals("b")) {
             System.out.println("Enter the Student ID to add marks");
@@ -379,10 +397,15 @@ public class Main {
                     for (int k = 0; k < 3; k++) {
                         System.out.println("Enter marks for module " + (k + 1) + ":");
                         marks[k] = scan.nextDouble();
+
                     }
+
                     // Store marks in a comma-separated string
+
                     students[1][i] += "," + marks[0] + "," + marks[1] + "," + marks[2];
                     System.out.println("Module marks updated");
+
+                    System.out.println("enter student name to get the average");
                     return;
                 }
             }
