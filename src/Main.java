@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Main {
@@ -126,7 +125,7 @@ public class Main {
             while (!answer.equals("no")) {
                 System.out.println("Enter the Student ID Number(W2083055)");//Asking user to enter the student ID
                 String Student_ID = scan.next();
-                if (!(Student_ID.length() == 8) && !Student_ID.startsWith("w")) {//Verifying the user Entered ID is a correct one or not
+                if (Student_ID.length() != 8 || !Student_ID.startsWith("w")) {//Verifying the user Entered ID is a correct one or not
                     System.out.println("Student ID Must Contain 8 Characters & Must Start with W");
                     return;
                 }
@@ -176,7 +175,9 @@ public class Main {
             }
         }
     }
-
+    /*Find Student which entered by user by itertin on the Students array and check whether there is
+    a student ID like which user entered
+     */
     private static void find_student(String students[][], Scanner scan) {
         System.out.print("Enter the student Id(W2083055) :-");
         String stud_Id = scan.next().toLowerCase();
@@ -349,7 +350,7 @@ public class Main {
             if (students[0][l] != null && students[0][l].equals(stud_Id)) {
                 students[0][l] = null;
                 students[1][l] = null;
-                System.out.println("Students details with " + stud_Id + "Deleted");
+                System.out.println("Students details with " + stud_Id +" "+ "Deleted");
                 System.out.println();
                 return;
             }
@@ -362,94 +363,80 @@ public class Main {
 
     }
 
-
-
+   /*Defining a java method to create student objects to save to a student array which consist of
+   of student objects and define to save the module marks to the relevat student object by getting the index
+   of the student object array
+    */
     private static void mod_marks(String[][] students, Scanner scan, Student[] studentObjects) {
-            int counts = 0;
-            System.out.println("Enter a. or b. ");
-            System.out.println("a. Add Student Name");
-            System.out.println("b. Module marks 1,2 and 3");
+        int index = -1;//assning the -1 value to the index Variable
+        System.out.println("Enter a. or b. ");
+        System.out.println("a. Add Student Name");
+        System.out.println("b. Module marks 1,2 and 3");
 
-            String ans = scan.next().toLowerCase();
+        String ans = scan.next().toLowerCase();//getting the student Input by Converting it intoloewr case
 
-            if (ans.equals("a")) {
-                System.out.println("Enter the Student ID to add name");
-                String studentID = scan.next();
-                for (int i = 0; i < students[0].length; i++) {
-                    if (students[0][i] != null && students[0][i].equals(studentID)) {
-                        System.out.println("Enter the Student Name");
-                        String studentName = scan.next();
-                        Student newStudent = new Student(studentName, studentID);
-                        studentObjects[counts] = newStudent;
-                        counts++;
-                        students[1][i] = studentName;
-                        System.out.println("Student Name Updated");
-                        System.out.println(newStudent.getName());
-                        return;
-                    }
-                }
+        if (ans.equals("a")) {
+            System.out.println("Enter the Student ID to add name");
+            String studentID = scan.next();
+            for (int i = 0; i < students[0].length; i++) {//Iteratin through the students Array
+                if (students[0][i] != null && students[0][i].equals(studentID)) {
+                    System.out.println("Enter the Student Name");
+                    String studentName = scan.next();
+                    students[1][i]=studentName;
+                    Student newStudent = new Student(studentName, studentID);
+                    //get the index of the student name in the student objects array
+                    for (int t = 0; t < studentObjects.length; t++) {
+                        if (studentObjects[t] == null) {//Check the first null in the array
+                            index = t;//assining the t to the index
+                            break;
 
-                System.out.println("Student Not Found");
-            } else if (ans.equals("b")) {
-                System.out.println("Enter the Student ID to add marks");
-                String studentID = scan.next();
-                for (Student student : studentObjects) {
-                    if (student != null && student.getStudentID().equals(studentID)) {
-                        int index = indexOf(studentObjects, studentID);
-                        Module[] modules = new Module[3];
-                        for (int k = 0; k < 3; k++) {
-                            System.out.println("Enter marks for module " + (k + 1) + ":");
-                            Double mark = scan.nextDouble();
-                            Module module = new Module();
-                            module.setMarks(mark);
-                            modules[k] = module;
                         }
-                        student.setModules(modules);
-                        System.out.println("Marks of the Student Added Successfully");
-                        return;
                     }
-                }
-                System.out.println("Student Not Found");
-            }else if (ans.equals("c")) {
-                    printAllStudentMarks(studentObjects);
-
-            } else {
-                System.out.println("Enter Correct input a or b");
-            }
-        }
-
-        public static int indexOf(Student[] arr, String target) {
-            for (int i = 0; i < arr.length; i++) {
-                if (arr[i] != null && arr[i].getStudentID().equals(target)) {
-                    return i; // Return index if found
-                }
-            }
-            return -1;
-        }
-    private static void printAllStudentMarks(Student[] studentObjects) {
-        boolean studentsFound = false;
-        for (Student student : studentObjects) {
-            if (student != null) {
-                studentsFound = true;
-                System.out.println("Student: " + student.getName() + " (ID: " + student.getStudentID() + ")");
-                Module[] modules = student.getModules();
-                for (int i = 0; i < modules.length; i++) {
-                    if (modules[i] != null) {
-                        System.out.println("  Module " + (i + 1) + ": " + modules[i].getMarks());
+                    if (index != -1) {//put a condition to filter if index is equals to -1
+                        studentObjects[index] = newStudent;//assigning the new student object to the studentObjects Array
+                        System.out.println("Student Added Successfully");
                     } else {
-                        System.out.println("  Module " + (i + 1) + ": No marks entered");
+                        System.out.println("No available Slots to add Students");
                     }
+        
+            
+        }
+    }
+            
+
+
+        } else if (ans.equals("b")) {//run if the user enters the option b
+            System.out.println("Enter the Student ID to add marks");
+            String studentID = scan.next();
+            for (Student student : studentObjects) {//iterating throught the Student Objects Array
+
+                /*chcek if the student object not equals to null and get the StudenT 
+                Id of the student object creates then chcek whether is it eqauls to the user entered student ID*/
+
+                if (student != null && student.getStudentID().equals(studentID)) {
+                    Module[] modules = new Module[3];
+                    for (int k = 0; k < 3; k++) {
+                        System.out.println("Enter marks for module " + (k + 1) + ":");
+                        Double mark = scan.nextDouble();
+                        Module module = new Module();//Creating a new module Object
+                        module.setMarks(mark);//Input marks to the object
+                        modules[k] = module;//Assining the marks to the correct index in Modules Array
+                    }
+                    student.setModules(modules);
+                    System.out.println("Marks of the Student Added Successfully");
+                    return;
                 }
-                System.out.println("  Average: " + student.Average());
-                System.out.println("  Grade: " + student.calcGrade());
-                System.out.println();
             }
-        }
-        if (!studentsFound) {
-            System.out.println("No students found in the system.");
+            System.out.println("Student Not Found");
+
+
+        } else {
+            System.out.println("Enter Correct input a or b");
         }
     }
-    }
+}
+
+
 
 
 
