@@ -42,6 +42,15 @@ public class Student {
         }
         return total_modules / 3;
     }
+    public double total(){
+        double module_totals=0;
+        for(Module module:modules){
+            if(module!=null){
+                module_totals+=module.getMarks();
+            }
+        }
+        return module_totals;
+    }
 
     public String calcGrade() {
         double avgGrade = Average();
