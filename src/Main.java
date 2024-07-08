@@ -543,7 +543,7 @@ public class Main {
         for (int h = 0; h < count_y; h++) {
             int index_i = Integer.parseInt(avg_arr[1][h]);
             Student student = studentObjects[index_i];
-            System.out.println("Student ID: " + student.getStudentID());/
+            System.out.println("Student ID: " + student.getStudentID());
             System.out.println("Student Name: " + student.getName());
             System.out.println("Total Marks: " + student.total());
 
