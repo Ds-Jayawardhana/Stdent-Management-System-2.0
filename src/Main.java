@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Main {
