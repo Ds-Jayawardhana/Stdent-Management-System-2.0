@@ -1,12 +1,12 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        //Initializing a string to print the whole menu without using If condition sone by one//
+        //Initializing a string to print the whole menu without using If condition so by one
         String prn_op = """
                 *************************
                 *      Menu Section     *
@@ -148,7 +148,7 @@ public class Main {
             }
         }
         if (availableSeats < 1) {//checking is there avaialable seats
-            System.out.print("Sorry there are no Seats Available");
+            System.out.println("Sorry there are no Seats Available");
 
         } else {
             String answer = "yes";
@@ -327,7 +327,7 @@ public class Main {
     private static void stud_sort(String students[][]) {
         int count = 0;//defining a variable to get the count of the non null data in the array
 
-        for (int l = 0; l < students.length; l++) {//Iterating throught the 0 th index of the array row
+        for (int l = 0; l < students[0].length; l++) {//Iterating throught the 0 th index of the array row
             if (students[0][l] != null) count++;//chcek if that rows are null & incrment the count by one
             else {
                 System.out.println("There is no Any Student Details");
@@ -400,10 +400,13 @@ public class Main {
      */
     private static void add_stOb(String[][] students, Scanner scan, Student[] studentObjects) {
         int index = -1;//setting index into -1
+
         System.out.println("Enter the Student ID to add name");
         String studentID = scan.next();
+        boolean student_founds = false;
         for (int i = 0; i < students[0].length; i++) {//Iterating through the students Array
             if (students[0][i] != null && students[0][i].equalsIgnoreCase(studentID)) {
+                student_founds = true;
                 System.out.println("Enter the Student Name");
                 String studentName = scan.next();
                 students[1][i] = studentName;//saving the student name in the main students Arrray
@@ -414,19 +417,22 @@ public class Main {
                         index = t;//assigning the t to the index
                         break;
                     }
-                    if (index != -1) {//put a condition to filter if index is not equals to -1
-                        studentObjects[index] = newStudent;//assigning the new student object to the studentObjects Array
-                        System.out.println("Student Added Successfully");
-                    } else{
-                        System.out.println("No slot Available !");
-                    }
-
-
                 }
-            } else {
-                System.out.println("Student is not registered ! Please register the student");
-                return;
+                if (index != -1) {//put a condition to filter if index is not equals to -1
+                    studentObjects[index] = newStudent;//assigning the new student object to the studentObjects Array
+                    System.out.println("Student Added Successfully");
+                } else {
+                    System.out.println("No slot Available !");
+                }
+                break;
+
+
             }
+        }
+        if (!student_founds) {
+            System.out.println("Student not found");
+
+
         }
     }
 
@@ -444,16 +450,22 @@ public class Main {
 
             if (student != null && student.getStudentID().equals(studentID)) {
                 Module[] modules = new Module[3];
-                for (int k = 0; k < 3; k++) {
-                    System.out.println("Enter marks for module " + (k + 1) + ":");
-                    Double mark = scan.nextDouble();
-                    if(mark<100||mark>0) {
-                        Module module = new Module();//Creating a new module Object
-                        module.setMarks(mark);//Input marks to the object
-                        modules[k] = module;//Assigning the marks to the correct index in Modules Array
-                    }else{
-                        System.out.println("Please Input Marks between 0 and 100");
+                try {
+                    for (int k = 0; k < 3; k++) {
+                        System.out.println("Enter marks for module " + (k + 1) + ":");
+
+                        Double mark = scan.nextDouble();
+
+                        if (mark < 100 || mark > 0) {
+                            Module module = new Module();//Creating a new module Object
+                            module.setMarks(mark);//Input marks to the object
+                            modules[k] = module;//Assigning the marks to the correct index in Modules Array
+                        } else {
+                            System.out.println("Please Input Marks between 0 and 100");
+                        }
                     }
+                } catch (InputMismatchException e) {
+                    System.out.println("Enter marks between 0 and 100");
                 }
                 student.setModules(modules);//Set Modules attributes to the student object
                 System.out.println("Marks of the Student Added Successfully");
@@ -463,7 +475,7 @@ public class Main {
         System.out.println("Student Not Found");
 
     }
-   
+
     /*Defining  a method to create a summary to get the Number of student reistered 
      and the number of students who scored more than 40 for every module
      */
@@ -475,20 +487,23 @@ public class Main {
             try {
                 if (student != null) {//Defning a codition to check if student array is not null
                     Module[] modules = student.getModules();
-                    for (int u = 0; u < modules.length; u++) {
-                        if (modules[u].getMarks() >= 40) {
-                            count_x += 1;
+                    boolean allabove40=true;
+                    for (Module module:modules) {
+                        if (module==null || module.getMarks()<40) {
+                            allabove40=false;
 
                         }
 
                     }
-                    if (count_x == 3) {
+                    if (allabove40) {
                         scored_more++;
                     }
 
                 }
-            } catch (NullPointerException e) {//Catch the Null point Exception if there is no modules marks for student object
-                System.out.println("There are No any Marks found for "+student.getStudentID());
+            } catch (
+                    NullPointerException e) {//Catch the Null point Exception if there is no modules marks for student object
+                System.out.println("Marks Didn't added for Students");
+                break;
             }
         }
         for (int l = 0; l < students.length; l++) {//iterate throughout the colums
@@ -545,27 +560,30 @@ public class Main {
                 }
             }
         }
-
+        System.out.printf("-----------------------------------------------------------------%n");
+        System.out.printf("| %-10s | %-10s | %-8s | %-8s | %-8s | %-8s | %-8s | %-8s |%n", "ID", "NAME", "MODULE 1", "MODULE 2", "MODULE 3", "TOTAL", "AVERAGE","GRADE");
+        System.out.printf("-----------------------------------------------------------------%n");
         // Print sorted student details
         for (int h = 0; h < count_y; h++) {
             int index_i = Integer.parseInt(avg_arr[1][h]);
             Student student = studentObjects[index_i];
-            System.out.println("Student ID: " + student.getStudentID());
-            System.out.println("Student Name: " + student.getName());
-            System.out.println("Total Marks: " + student.total());
+
+
+            System.out.printf("| %-10s | %-10s |", student.getStudentID(), student.getName());
 
             Module[] modules = student.getModules();
-            try{
-            for (int u = 0; u < modules.length; u++) {
-                System.out.println("Marks of the Module " + (u + 1) + " is: " + modules[u].getMarks());//get the module marks of relavnt to students
+            for (int u = 0; u < 3; u++) {
+                if (modules[u] != null && modules[u].getMarks() != null) {
+                    System.out.printf(" %-8.2f |", modules[u].getMarks());
+                } else {
+                    System.out.printf(" %-8s |", "-");
+                }
             }
-        }catch(NullPointerException e){
-            System.out.println("Marks are not found for the student"+" "+student.getStudentID());
+
+            System.out.printf(" %-8.2f | %-8.2f | %-8s |%n", student.total(), student.Average(),student.calcGrade());
         }
 
-            System.out.println("Average: " + avg_arr[0][h]);
-            System.out.println("---------------------------");
-        }
+        System.out.printf("-----------------------------------------------------------------%n");
     }
 }
 

@@ -1,15 +1,15 @@
-public class Student {
+public class Student {//Creating Astudent Class
     private String name;
     private String studentID;
     private Module[] modules;
 
-    public Student(String name, String studentID) {
+    public Student(String name, String studentID) {//Creating Attrburtes to the Object
         this.name = name;
         this.studentID = studentID;
         this.modules = new Module[3];
     }
 
-    public void setModules(Module[] modules) {
+    public void setModules(Module[] modules) {//Defning SetModule Method
         this.modules = modules;
     }
 
